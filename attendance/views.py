@@ -63,20 +63,22 @@ class SubjectSummaryView(APIView):
             student=student
         )
 
-        subjects = attendance_records.values_list(
-            "subject",
+        result = []
+
+        subject_names = attendance_records.values_list(
+            "subject__name",
             flat=True
         ).distinct()
 
-        result = []
+        for subject_name in subject_names:
 
-        for subject in subjects:
-            total_classes = attendance_records.filter(
-                subject=subject
-            ).count()
+            subject_records = attendance_records.filter(
+                subject__name=subject_name
+            )
 
-            present_classes = attendance_records.filter(
-                subject=subject,
+            total_classes = subject_records.count()
+
+            present_classes = subject_records.filter(
                 status="Present"
             ).count()
 
@@ -86,13 +88,13 @@ class SubjectSummaryView(APIView):
             )
 
             result.append({
-                "subject": subject,
+                "subject": subject_name,
                 "total_classes": total_classes,
                 "present_classes": present_classes,
                 "attendance_percentage": round(percentage, 2)
             })
 
-        return Response(result)     
+        return Response(result)  
 
 class MonthlyAttendanceView(APIView):
     permission_classes = [IsAuthenticated]

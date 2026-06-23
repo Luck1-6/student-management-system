@@ -95,6 +95,19 @@
   color: #1e293b;
 }
 
+.chart-card {
+  background: #fff;
+  padding: 20px;
+  margin-top: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.chart-card h2 {
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

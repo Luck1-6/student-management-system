@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
 import API from "../api/attendanceApi";
 import "./styles/AttendancePage.css";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  LineChart,
+  Line,
+} from "recharts";
 
 function AttendancePage() {
   const [overall, setOverall] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [monthly, setMonthly] = useState([]);
   const [history, setHistory] = useState([]);
+  const COLORS = ["#22c55e", "#ef4444"];
 
   useEffect(() => {
     fetchData();
@@ -27,6 +42,19 @@ function AttendancePage() {
       console.error(error);
     }
   };
+
+  const pieData = overall
+  ? [
+      {
+        name: "Present",
+        value: overall.present_classes,
+      },
+      {
+        name: "Absent",
+        value: overall.absent_classes,
+      },
+    ]
+  : [];
 
   return (
     <div className="attendance-container">
@@ -73,6 +101,76 @@ function AttendancePage() {
             </div>
 
             <p>{overall.attendance_percentage}%</p>
+          </div>
+
+          {/* Pie Chart */}
+          <div className="table-card">
+            <h2>Attendance Distribution</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={true}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          
+          {/* Subject-wise Bar Chart */}
+          <div className="table-card">
+            <h2>Subject-wise Attendance Chart</h2>
+
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={subjects}>
+                <CartesianGrid strokeDasharray="3 3" />
+
+                <XAxis dataKey="subject" />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Bar
+                  dataKey="attendance_percentage"
+                  fill="#2563eb"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Monthly Line Chart */}
+          <div className="table-card">
+            <h2>Monthly Attendance</h2>
+
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={monthly}>
+                <CartesianGrid strokeDasharray="3 3" />
+
+                <XAxis dataKey="month" />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Line
+                  type="monotone"
+                  dataKey="attendance_percentage"
+                  stroke="#2563eb"
+                  strokeWidth={3}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
 
           {/* Subject-wise Attendance */}
