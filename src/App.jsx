@@ -7,6 +7,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AttendancePage from "./pages/AttendancePage";
+import StaffAttendancePage from "./pages/StaffAttendancePage";
+import UpdateAttendancePage from "./pages/UpdateAttendancePage";
 function App() {
   return (
     <BrowserRouter>
@@ -49,6 +51,24 @@ function App() {
           element={
             <ProtectedRoute>
               <AttendancePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/staff/attendance"
+          element={
+            <ProtectedRoute>
+              <StaffAttendancePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/staff/update-attendance"
+          element={
+            <ProtectedRoute>
+              <UpdateAttendancePage />
             </ProtectedRoute>
           }
         />

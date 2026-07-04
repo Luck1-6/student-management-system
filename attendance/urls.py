@@ -4,8 +4,14 @@ from .views import (
     OverallAttendanceView,
     SubjectSummaryView,
     MonthlyAttendanceView,
+    StudentListView,
+    MarkAttendanceView,
+    UpdateAttendanceView,
+    SubjectListView,
+    LoadAttendanceView,
 )
 
+path
 
 urlpatterns = [
     path(
@@ -27,5 +33,30 @@ urlpatterns = [
         "monthly/",
         MonthlyAttendanceView.as_view(),
         name="monthly-attendance",
+    ),
+    path(
+        "students/",
+        StudentListView.as_view(),
+        name="student-list",
+    ),
+    path(
+        "subjects/",
+        SubjectListView.as_view(),
+        name="subject-list",
+    ),
+    path(
+        "mark/",
+        MarkAttendanceView.as_view(),
+        name="mark-attendance",
+    ),
+    path(
+        "update/<int:pk>/",
+        UpdateAttendanceView.as_view(),
+        name="update-attendance",
+    ),
+    path(
+        "load/",
+        LoadAttendanceView.as_view(),
+        name="load-attendance",
     ),
 ]

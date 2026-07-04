@@ -50,6 +50,13 @@ class Attendance(models.Model):
         db_table = "attendance_record"
         ordering = ["-date"]
 
+        constraints = [
+            models.UniqueConstraint(
+                fields=["student", "subject", "date"],
+                name="unique_student_subject_date"
+            )
+        ]
+
     def __str__(self):
         return (
             f"{self.student.username} - "

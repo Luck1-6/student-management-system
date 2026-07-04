@@ -1,13 +1,27 @@
+from django.db import IntegrityError
+
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+
 from .models import Attendance
 from .serializers import AttendanceSerializer
+from .serializers import AttendanceUpdateSerializer
 
 from django.db.models import Count
 from collections import defaultdict
+
+from users.models import CustomUser
+from .models import Subject
+from .serializers import (
+    AttendanceCreateSerializer,
+    SubjectSerializer,
+    AttendanceStatusUpdateSerializer,
+)
 
 class MyAttendanceView(generics.ListAPIView):
     serializer_class = AttendanceSerializer
@@ -142,6 +156,126 @@ class MonthlyAttendanceView(APIView):
                 )
             })
 
-        return Response(result)           
+        return Response(result)        
+
+class StudentListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        students = CustomUser.objects.filter(
+            role="student"
+        )
+
+        data = [
+            {
+                "id": student.id,
+                "username": student.username,
+                "name": student.get_full_name(),
+            }
+            for student in students
+        ]
+
+        return Response(data)
+
+class SubjectListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        subjects = Subject.objects.all().order_by("name")
+
+        serializer = SubjectSerializer(
+            subjects,
+            many=True
+        )
+
+        return Response(serializer.data)        
+
+class MarkAttendanceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        serializer = AttendanceCreateSerializer(
+            data=request.data
+        )
+
+        if serializer.is_valid():
+
+            try:
+                attendance = serializer.save(
+                    staff=request.user
+                )
+
+                return Response({
+                    "message": "Attendance marked successfully",
+                    "id": attendance.id
+                })
+
+            except IntegrityError:
+                return Response(
+                    {
+                        "error": "Attendance has already been marked for this student, subject and date."
+                    },
+                    status=400
+              )     
+        return Response(
+            serializer.errors,
+            status=400
+        )         
+
+class UpdateAttendanceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, pk):
+
+        try:
+            attendance = Attendance.objects.get(id=pk)
+
+        except Attendance.DoesNotExist:
+            return Response(
+                {"error": "Attendance record not found"},
+                status=404
+            )
+
+        serializer = AttendanceStatusUpdateSerializer(
+            attendance,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "message": "Attendance updated successfully"
+            })
+
+        return Response(
+            serializer.errors,
+            status=400
+        )                  
+
+class LoadAttendanceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        subject_id = request.GET.get("subject")
+        date = request.GET.get("date")
+
+        if not subject_id or not date:
+            return Response(
+                {"error": "Subject and date are required."},
+                status=400
+            )
+
+        attendance = Attendance.objects.filter(
+            subject_id=subject_id,
+            date=date
+        ).select_related("student")
+
+        serializer = AttendanceUpdateSerializer(attendance, many=True)
+        return Response(serializer.data)        
 # Create your views here.
 
