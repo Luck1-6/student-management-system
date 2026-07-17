@@ -15,6 +15,9 @@ from .serializers import AttendanceUpdateSerializer
 from django.db.models import Count
 from collections import defaultdict
 
+from datetime import date
+from django.db.models import Q
+
 from users.models import CustomUser
 from .models import Subject
 from .serializers import (
@@ -276,6 +279,72 @@ class LoadAttendanceView(APIView):
         ).select_related("student")
 
         serializer = AttendanceUpdateSerializer(attendance, many=True)
-        return Response(serializer.data)        
+        return Response(serializer.data)     
+
+class AdminDashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        if request.user.role != "admin":
+            return Response(
+                {"error": "Permission denied."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        total_students = CustomUser.objects.filter(
+            role="student"
+        ).count()
+
+        total_staff = CustomUser.objects.filter(
+            role="staff"
+        ).count()
+
+        total_subjects = Subject.objects.count()
+
+        total_attendance_records = Attendance.objects.count()
+
+        today = date.today()
+
+        today_records = Attendance.objects.filter(
+            date=today
+        )
+
+        today_total = today_records.count()
+
+        today_present = today_records.filter(
+            status="Present"
+        ).count()
+
+        today_percentage = (
+            (today_present / today_total) * 100
+            if today_total > 0
+            else 0
+        )
+
+        total_present = Attendance.objects.filter(
+            status="Present"
+        ).count()
+
+        overall_percentage = (
+            (total_present / total_attendance_records) * 100
+            if total_attendance_records > 0
+            else 0
+        )
+
+        return Response(
+            {
+                "total_students": total_students,
+                "total_staff": total_staff,
+                "total_subjects": total_subjects,
+                "total_attendance_records": total_attendance_records,
+                "today_attendance_percentage": round(
+                    today_percentage, 2
+                ),
+                "overall_attendance_percentage": round(
+                    overall_percentage, 2
+                ),
+            }
+        )           
 # Create your views here.
 

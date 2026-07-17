@@ -9,6 +9,7 @@ from .views import (
     UpdateAttendanceView,
     SubjectListView,
     LoadAttendanceView,
+    AdminDashboardView,
 )
 
 path
@@ -58,5 +59,10 @@ urlpatterns = [
         "load/",
         LoadAttendanceView.as_view(),
         name="load-attendance",
+    ),
+    path(
+        "admin/dashboard/",
+        AdminDashboardView.as_view(),
+        name="admin-dashboard",
     ),
 ]

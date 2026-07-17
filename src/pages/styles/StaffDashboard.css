@@ -1,0 +1,213 @@
+.staff-dashboard{
+    min-height:100vh;
+    background:#f4f7fb;
+    padding:40px;
+}
+
+/* Header */
+
+.dashboard-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.dashboard-header h1{
+    color:#1e3a8a;
+    margin-bottom:6px;
+}
+
+.dashboard-header p{
+    color:#666;
+}
+
+/* Logout */
+
+.logout-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    border:none;
+    background:#ef4444;
+    color:white;
+
+    padding:12px 20px;
+    border-radius:8px;
+
+    cursor:pointer;
+    transition:.3s;
+}
+
+.logout-btn:hover{
+    background:#dc2626;
+}
+
+/* Welcome */
+
+.welcome-card{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+    margin-bottom:30px;
+}
+
+.welcome-card h2{
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.welcome-card p{
+    color:#666;
+}
+
+/* Cards */
+
+.dashboard-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+
+    gap:25px;
+
+    margin-bottom:30px;
+
+}
+
+.dashboard-card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.dashboard-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.card-icon{
+
+    font-size:50px;
+
+    color:#2563eb;
+
+    margin-bottom:20px;
+
+}
+
+.dashboard-card h3{
+
+    margin-bottom:12px;
+
+    color:#1f2937;
+
+}
+
+.dashboard-card p{
+
+    color:#666;
+
+    margin-bottom:20px;
+
+}
+
+/* Buttons */
+
+.action-btn{
+
+    border:none;
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:12px 28px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.action-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* Info */
+
+.info-card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:12px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.info-card h3{
+
+    margin-bottom:20px;
+
+    color:#1f2937;
+
+}
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:20px;
+
+}
+
+.info-grid div{
+
+    background:#f8fafc;
+
+    border-radius:10px;
+
+    padding:20px;
+
+}
+
+.info-grid span{
+
+    display:block;
+
+    color:#888;
+
+    margin-bottom:8px;
+
+}
+
+.info-grid strong{
+
+    font-size:18px;
+
+    color:#2563eb;
+
+}
