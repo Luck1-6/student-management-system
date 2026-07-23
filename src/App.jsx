@@ -9,6 +9,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AttendancePage from "./pages/AttendancePage";
 import StaffAttendancePage from "./pages/StaffAttendancePage";
 import UpdateAttendancePage from "./pages/UpdateAttendancePage";
+import AttendanceManagement from "./pages/AttendanceManagement";
 function App() {
   return (
     <BrowserRouter>
@@ -69,6 +70,24 @@ function App() {
           element={
             <ProtectedRoute>
               <UpdateAttendancePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+         }
+        />
+
+        <Route
+          path="/admin/attendance"
+          element={
+            <ProtectedRoute role ="admin">
+              <AttendanceManagement />
             </ProtectedRoute>
           }
         />

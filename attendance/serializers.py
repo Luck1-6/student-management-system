@@ -58,3 +58,32 @@ class AttendanceStatusUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attendance
         fields = ["status"]        
+
+class AdminAttendanceSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(
+        source="student.username",
+        read_only=True
+    )
+
+    subject_name = serializers.CharField(
+        source="subject.name",
+        read_only=True
+    )
+
+    staff_name = serializers.CharField(
+        source="staff.username",
+        read_only=True
+    )
+
+    class Meta:
+        model = Attendance
+        fields = [
+            "id",
+            "date",
+            "student_id",
+            "student_name",
+            "subject_id",
+            "subject_name",
+            "staff_name",
+            "status",
+        ]       

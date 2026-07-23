@@ -3,6 +3,8 @@ from django.db import IntegrityError
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
+from users.permissions import IsAdmin
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework import status
@@ -11,6 +13,7 @@ from django.shortcuts import get_object_or_404
 from .models import Attendance
 from .serializers import AttendanceSerializer
 from .serializers import AttendanceUpdateSerializer
+from .serializers import AdminAttendanceSerializer
 
 from django.db.models import Count
 from collections import defaultdict
@@ -20,6 +23,7 @@ from django.db.models import Q
 
 from users.models import CustomUser
 from .models import Subject
+from .models import Attendance
 from .serializers import (
     AttendanceCreateSerializer,
     SubjectSerializer,
@@ -345,6 +349,57 @@ class AdminDashboardView(APIView):
                     overall_percentage, 2
                 ),
             }
-        )           
+        )      
+
+class AdminAttendanceListView(ListAPIView):
+    """
+    Admin:
+    View every attendance record.
+
+    Supports filtering by:
+    - date
+    - student
+    - subject
+    - staff
+    - status
+    """
+
+    serializer_class = AdminAttendanceSerializer
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get_queryset(self):
+        queryset = (
+            Attendance.objects
+            .select_related(
+                "student",
+                "subject",
+                "staff",
+            )
+            .all()
+            .order_by("-date", "-id")
+        )
+
+        date = self.request.query_params.get("date")
+        student = self.request.query_params.get("student")
+        subject = self.request.query_params.get("subject")
+        staff = self.request.query_params.get("staff")
+        status = self.request.query_params.get("status")
+
+        if date:
+            queryset = queryset.filter(date=date)
+
+        if student:
+            queryset = queryset.filter(student_id=student)
+
+        if subject:
+            queryset = queryset.filter(subject_id=subject)
+
+        if staff:
+            queryset = queryset.filter(staff_id=staff)
+
+        if status:
+            queryset = queryset.filter(status__iexact=status)
+
+        return queryset             
 # Create your views here.
 
