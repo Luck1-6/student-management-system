@@ -10,7 +10,9 @@ from .views import (
     SubjectListView,
     LoadAttendanceView,
     AdminDashboardView,
-    AdminAttendanceListView
+    AdminAttendanceListView,
+    AdminAttendanceUpdateView,
+    AdminAttendanceDeleteView
 )
 
 path
@@ -71,5 +73,16 @@ urlpatterns = [
         AdminAttendanceListView.as_view(),
         name="admin-attendance-list",
     ),
+    path(
+        "admin/attendance/<int:pk>/",
+        AdminAttendanceUpdateView.as_view(),
+        name="admin-attendance-update",
+    ),
+    path(
+        "admin/attendance/<int:pk>/delete/",
+        AdminAttendanceDeleteView.as_view(),
+        name="admin-attendance-delete",
+    ),
+
 ]
 

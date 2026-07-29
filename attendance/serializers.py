@@ -87,3 +87,12 @@ class AdminAttendanceSerializer(serializers.ModelSerializer):
             "staff_name",
             "status",
         ]       
+
+class AdminAttendanceUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = [
+            "date",
+            "subject",
+            "status",
+        ]        

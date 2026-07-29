@@ -40,3 +40,32 @@ export const getAttendanceRecords = async (filters = {}) => {
 
   return response.data;
 };
+
+/**
+ * Update attendance record
+ */
+export const updateAttendance = async (id, data) => {
+  const response = await API.patch(
+    `admin/attendance/${id}/`,
+    data
+  );
+
+  return response.data;
+};
+
+/**
+ * Delete attendance record
+ */
+export const deleteAttendance = async (id) => {
+  const response = await API.delete(
+    `admin/attendance/${id}/delete/`
+  );
+
+  return response.data;
+};
+
+export const getSubjects = async () => {
+  const response = await API.get("subjects/");
+  return response.data;
+};
+

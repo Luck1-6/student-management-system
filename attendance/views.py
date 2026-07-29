@@ -14,6 +14,7 @@ from .models import Attendance
 from .serializers import AttendanceSerializer
 from .serializers import AttendanceUpdateSerializer
 from .serializers import AdminAttendanceSerializer
+from .serializers import AdminAttendanceUpdateSerializer
 
 from django.db.models import Count
 from collections import defaultdict
@@ -400,6 +401,45 @@ class AdminAttendanceListView(ListAPIView):
         if status:
             queryset = queryset.filter(status__iexact=status)
 
-        return queryset             
+        return queryset      
+
+class AdminAttendanceUpdateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def patch(self, request, pk):
+        attendance = get_object_or_404(Attendance, pk=pk)
+
+        serializer = AdminAttendanceUpdateSerializer(
+            attendance,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "Attendance updated successfully.",
+                "data": serializer.data
+            })
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )     
+
+class AdminAttendanceDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def delete(self, request, pk):
+        attendance = get_object_or_404(Attendance, pk=pk)
+
+        attendance.delete()
+
+        return Response(
+            {
+                "message": "Attendance deleted successfully."
+            },
+            status=status.HTTP_200_OK,
+        )                  
 # Create your views here.
 
