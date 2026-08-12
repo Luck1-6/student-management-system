@@ -2,192 +2,213 @@
    Attendance Management
 ========================================== */
 
-.attendance-management{
-    padding:30px;
-    background:#f4f7fb;
-    min-height:100vh;
+.attendance-management {
+    padding: 30px;
+    background: #f4f7fb;
+    min-height: 100vh;
 }
 
 /* ==========================================
    Header
 ========================================== */
 
-.page-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-    flex-wrap:wrap;
-    gap:15px;
+.page-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
-.page-top h1{
-    margin:0;
-    color:#1f2937;
+.page-top h1 {
+    margin: 0;
+    color: #1f2937;
 }
 
-.page-top p{
-    margin-top:6px;
-    color:#6b7280;
+.page-top p {
+    margin-top: 6px;
+    color: #6b7280;
 }
 
-.back-btn{
-    background:#2563eb;
-    color:white;
-    border:none;
-    padding:12px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    transition:.25s;
-    font-weight:600;
+.back-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+    font-weight: 600;
 }
 
-.back-btn:hover{
-    background:#1d4ed8;
+.back-btn:hover {
+    background: #1d4ed8;
 }
 
 /* ==========================================
    Summary Card
 ========================================== */
 
-.summary-card{
-    background:white;
-    border-radius:16px;
-    padding:22px;
-    margin-bottom:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
+.summary-card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.summary-card h3{
-    color:#6b7280;
-    margin-bottom:10px;
+.summary-card h3 {
+    color: #6b7280;
+    margin-bottom: 10px;
 }
 
-.summary-card h2{
-    color:#2563eb;
-    font-size:34px;
+.summary-card h2 {
+    color: #2563eb;
+    font-size: 34px;
+    margin: 0;
 }
 
 /* ==========================================
-   Filter Bar
+   FR-4.10 Search & Filter Bar
 ========================================== */
 
-.filter-bar{
-    display:flex;
-    gap:18px;
-    flex-wrap:wrap;
-    align-items:center;
-    background:white;
-    padding:20px;
-    margin-bottom:25px;
-    border-radius:16px;
-    box-shadow:0 8px 22px rgba(0,0,0,.08);
+.filter-bar {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
 }
 
-.results-info{
-    color:#6b7280;
-    font-size:15px;
+/* Results */
+
+.results-info {
+    width: 100%;
+    color: #6b7280;
+    font-size: 15px;
+    margin-bottom: 2px;
 }
+
+.results-info strong {
+    color: #1f2937;
+}
+
+/* Search */
 
 .search-input,
 .date-input,
-.status-input{
-    padding:12px 15px;
-    border:1px solid #d1d5db;
-    border-radius:10px;
-    outline:none;
-    font-size:15px;
-    transition:.25s;
+.status-input {
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    outline: none;
+    font-size: 15px;
+    transition: 0.25s;
+    background: white;
+    box-sizing: border-box;
 }
 
-.search-input{
-    flex:1;
-    min-width:260px;
+.search-input {
+    flex: 1;
+    min-width: 280px;
 }
 
-.date-input{
-    min-width:170px;
+.date-input {
+    min-width: 170px;
 }
 
-.status-input{
-    min-width:170px;
+.status-input {
+    min-width: 165px;
 }
 
 .search-input:focus,
 .date-input:focus,
-.status-input:focus{
-    border-color:#2563eb;
-    box-shadow:0 0 8px rgba(37,99,235,.18);
+.status-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.18);
 }
 
-.clear-btn{
-    background:#6b7280;
-    color:white;
-    border:none;
-    padding:12px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    transition:.25s;
+/* Clear Filters */
+
+.clear-btn {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
-.clear-btn:hover{
-    background:#4b5563;
+.clear-btn:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
 }
 
 /* ==========================================
    Table
 ========================================== */
 
-.table-container{
-    overflow-x:auto;
-    background:white;
-    border-radius:16px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
+.table-container {
+    overflow-x: auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.attendance-table{
-    width:100%;
-    border-collapse:collapse;
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1050px;
 }
 
-.attendance-table th{
-    background:#2d86d5;
-    color:white;
-    padding:15px;
+.attendance-table th {
+    background: #2d86d5;
+    color: white;
+    padding: 15px;
+    white-space: nowrap;
 }
 
-.attendance-table td{
-    padding:15px;
-    border-bottom:1px solid #ececec;
-    text-align:center;
+.attendance-table td {
+    padding: 15px;
+    border-bottom: 1px solid #ececec;
+    text-align: center;
+    white-space: nowrap;
 }
 
-.attendance-table tr:nth-child(even){
-    background:#fafafa;
+.attendance-table tr:nth-child(even) {
+    background: #fafafa;
 }
 
-.attendance-table tr:hover{
-    background:#eef6ff;
+.attendance-table tbody tr:hover {
+    background: #eef6ff;
 }
 
 /* ==========================================
    Status Badge
 ========================================== */
 
-.status{
-    padding:8px 18px;
-    border-radius:999px;
-    color:white;
-    font-weight:600;
-    display:inline-block;
+.status {
+    padding: 8px 18px;
+    border-radius: 999px;
+    color: white;
+    font-weight: 600;
+    display: inline-block;
 }
 
-.present{
-    background:#16a34a;
+.present {
+    background: #16a34a;
 }
 
-.absent{
-    background:#dc2626;
+.absent {
+    background: #dc2626;
 }
 
 /* ==========================================
@@ -195,188 +216,225 @@
 ========================================== */
 
 .edit-btn,
-.delete-btn{
-    border:none;
-    padding:9px 15px;
-    border-radius:8px;
-    cursor:pointer;
-    color:white;
-    font-weight:600;
-    transition:.25s;
-    margin:2px;
+.delete-btn {
+    border: none;
+    padding: 9px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: 0.25s;
+    margin: 2px;
+    white-space: nowrap;
 }
 
-.edit-btn{
-    background:#f59e0b;
+.edit-btn {
+    background: #f59e0b;
 }
 
-.edit-btn:hover{
-    background:#d97706;
-    transform:translateY(-2px);
+.edit-btn:hover {
+    background: #d97706;
+    transform: translateY(-2px);
 }
 
-.delete-btn{
-    background:#dc2626;
+.delete-btn {
+    background: #dc2626;
 }
 
-.delete-btn:hover{
-    background:#b91c1c;
-    transform:translateY(-2px);
+.delete-btn:hover {
+    background: #b91c1c;
+    transform: translateY(-2px);
 }
 
 /* ==========================================
    Modal Overlay
 ========================================== */
 
-.modal-overlay{
-    position:fixed;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:rgba(17,24,39,.55);
-    backdrop-filter:blur(5px);
-    z-index:9999;
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(17, 24, 39, 0.55);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
 }
 
 /* ==========================================
    Edit Modal
 ========================================== */
 
-.edit-modal{
-    width:480px;
-    max-width:92%;
-    background:white;
-    border-radius:18px;
-    padding:30px;
-    box-shadow:0 25px 60px rgba(0,0,0,.25);
-    animation:modalPop .28s ease;
+.edit-modal {
+    width: 480px;
+    max-width: 92%;
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    animation: modalPop 0.28s ease;
 }
 
-@keyframes modalPop{
+@keyframes modalPop {
 
-    from{
-        transform:scale(.92);
-        opacity:0;
+    from {
+        transform: scale(0.92);
+        opacity: 0;
     }
 
-    to{
-        transform:scale(1);
-        opacity:1;
+    to {
+        transform: scale(1);
+        opacity: 1;
     }
 
 }
 
-.edit-modal h2{
-    text-align:center;
-    margin-bottom:25px;
-    color:#1f2937;
+.edit-modal h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #1f2937;
 }
 
 /* ==========================================
    Form
 ========================================== */
 
-.form-group{
-    display:flex;
-    flex-direction:column;
-    margin-bottom:18px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
 }
 
-.form-group label{
-    margin-bottom:8px;
-    font-weight:600;
-    color:#374151;
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
 }
 
 .form-group input,
-.form-group select{
-    width:100%;
-    padding:12px 14px;
-    border:1px solid #d1d5db;
-    border-radius:10px;
-    outline:none;
-    font-size:15px;
-    transition:.25s;
-    background:white;
+.form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    outline: none;
+    font-size: 15px;
+    transition: 0.25s;
+    background: white;
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
-.form-group select:focus{
-    border-color:#2563eb;
-    box-shadow:0 0 8px rgba(37,99,235,.18);
+.form-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.18);
 }
 
 /* ==========================================
    Modal Buttons
 ========================================== */
 
-.modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:14px;
-    margin-top:28px;
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 28px;
 }
 
 .cancel-btn,
-.save-btn{
-    border:none;
-    padding:11px 24px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:600;
-    transition:.25s;
+.save-btn {
+    border: none;
+    padding: 11px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s;
 }
 
-.cancel-btn{
-    background:#6b7280;
-    color:white;
+.cancel-btn {
+    background: #6b7280;
+    color: white;
 }
 
-.cancel-btn:hover{
-    background:#4b5563;
+.cancel-btn:hover {
+    background: #4b5563;
 }
 
-.save-btn{
-    background:#16a34a;
-    color:white;
+.save-btn {
+    background: #16a34a;
+    color: white;
 }
 
-.save-btn:hover{
-    background:#15803d;
-    transform:translateY(-2px);
+.save-btn:hover {
+    background: #15803d;
+    transform: translateY(-2px);
 }
 
 /* ==========================================
    Responsive
 ========================================== */
 
-@media (max-width:768px){
+@media (max-width: 1100px) {
 
-    .page-top{
-        flex-direction:column;
-        align-items:flex-start;
+    .search-input {
+        min-width: 240px;
     }
 
-    .filter-bar{
-        flex-direction:column;
-        align-items:stretch;
+    .status-input {
+        min-width: 150px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .attendance-management {
+        padding: 20px;
+    }
+
+    .page-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* Filter section */
+
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .results-info {
+        margin-bottom: 5px;
     }
 
     .search-input,
     .date-input,
     .status-input,
-    .clear-btn{
-        width:100%;
+    .clear-btn {
+        width: 100%;
+        min-width: 100%;
     }
 
-    .modal-actions{
-        flex-direction:column;
+    /* Table */
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .attendance-table {
+        min-width: 1050px;
+    }
+
+    /* Modal */
+
+    .modal-actions {
+        flex-direction: column;
     }
 
     .cancel-btn,
-    .save-btn{
-        width:100%;
+    .save-btn {
+        width: 100%;
     }
 
 }

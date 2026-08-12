@@ -20,16 +20,19 @@ const AttendanceManagement = () => {
 
   const [loading, setLoading] = useState(true);
 
+  // FR-4.10 Search & Filter states
   const [search, setSearch] = useState("");
   const [date, setDate] = useState("");
   const [status, setStatus] = useState("");
+  const [subject, setSubject] = useState("");
+  const [staff, setStaff] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAttendance, setSelectedAttendance] = useState(null);
 
   useEffect(() => {
     fetchAttendance();
-  }, [date, status]);
+  }, [date, status, subject, staff]);
 
   useEffect(() => {
     fetchSubjects();
@@ -39,10 +42,25 @@ const AttendanceManagement = () => {
     try {
       setLoading(true);
 
-      const data = await getAttendanceRecords({
-        date,
-        status,
-      });
+      const filters = {};
+
+      if (date) {
+        filters.date = date;
+      }
+
+      if (status) {
+        filters.status = status;
+      }
+
+      if (subject) {
+        filters.subject = subject;
+      }
+
+      if (staff) {
+        filters.staff = staff;
+      }
+
+      const data = await getAttendanceRecords(filters);
 
       setAttendance(data);
     } catch (error) {
@@ -102,24 +120,79 @@ const AttendanceManagement = () => {
     }
   };
 
+  /*
+   * FR-4.10
+   * Client-side search.
+   *
+   * Searches:
+   * - Student name
+   * - Student ID
+   * - Subject name
+   * - Staff name
+   */
   const filteredAttendance = attendance.filter((record) => {
-    const keyword = search.toLowerCase();
+    const keyword = search.trim().toLowerCase();
+
+    if (!keyword) {
+      return true;
+    }
+
+    const studentName = String(record.student_name || "").toLowerCase();
+    const studentId = String(record.student_id || "").toLowerCase();
+    const subjectName = String(record.subject_name || "").toLowerCase();
+    const staffName = String(record.staff_name || "").toLowerCase();
 
     return (
-      record.student_name.toLowerCase().includes(keyword) ||
-      record.subject_name.toLowerCase().includes(keyword) ||
-      record.staff_name.toLowerCase().includes(keyword)
+      studentName.includes(keyword) ||
+      studentId.includes(keyword) ||
+      subjectName.includes(keyword) ||
+      staffName.includes(keyword)
     );
   });
 
+  /*
+   * Get unique staff names from the attendance response.
+   * This allows us to provide a Staff dropdown without
+   * creating another API endpoint.
+   */
+  const staffList = [
+    ...new Set(
+      attendance
+        .map((record) => record.staff_name)
+        .filter((name) => name)
+    ),
+  ].sort();
+
+  /*
+   * Subjects are already loaded from getSubjects().
+   */
+  const subjectList = subjects || [];
+
+  const clearFilters = () => {
+    setSearch("");
+    setDate("");
+    setStatus("");
+    setSubject("");
+    setStaff("");
+  };
+
+  const hasActiveFilters =
+    search || date || status || subject || staff;
+
   return (
     <div className="attendance-management">
+
+      {/* ==========================
+          Page Header
+      ========================== */}
 
       <div className="page-top">
 
         <div>
           <h1>📋 Attendance Management</h1>
-          <p>View and manage attendance records.</p>
+          <p>
+            View, search, filter and manage attendance records.
+          </p>
         </div>
 
         <button
@@ -131,27 +204,42 @@ const AttendanceManagement = () => {
 
       </div>
 
+      {/* ==========================
+          Summary Card
+      ========================== */}
+
       <div className="summary-card">
 
         <h3>Total Attendance Records</h3>
+
         <h2>{filteredAttendance.length}</h2>
 
       </div>
 
+      {/* ==========================
+          FR-4.10 Search & Filters
+      ========================== */}
+
       <div className="filter-bar">
+
+        {/* Results information */}
 
         <div className="results-info">
           Showing <strong>{filteredAttendance.length}</strong> of{" "}
           <strong>{attendance.length}</strong> records
         </div>
 
+        {/* Search */}
+
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search student, ID, subject or staff..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="search-input"
         />
+
+        {/* Date */}
 
         <input
           type="date"
@@ -159,6 +247,46 @@ const AttendanceManagement = () => {
           onChange={(e) => setDate(e.target.value)}
           className="date-input"
         />
+
+        {/* Subject */}
+
+        <select
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          className="status-input"
+        >
+          <option value="">All Subjects</option>
+
+          {subjectList.map((item) => (
+            <option
+              key={item.id || item.subject_id || item.name}
+              value={item.id || item.subject_id}
+            >
+              {item.name || item.subject_name}
+            </option>
+          ))}
+        </select>
+
+        {/* Staff */}
+
+        <select
+          value={staff}
+          onChange={(e) => setStaff(e.target.value)}
+          className="status-input"
+        >
+          <option value="">All Staff</option>
+
+          {staffList.map((staffName) => (
+            <option
+              key={staffName}
+              value={staffName}
+            >
+              {staffName}
+            </option>
+          ))}
+        </select>
+
+        {/* Status */}
 
         <select
           value={status}
@@ -170,18 +298,20 @@ const AttendanceManagement = () => {
           <option value="Absent">Absent</option>
         </select>
 
+        {/* Clear */}
+
         <button
           className="clear-btn"
-          onClick={() => {
-            setSearch("");
-            setDate("");
-            setStatus("");
-          }}
+          onClick={clearFilters}
         >
-          Clear Filters
+          {hasActiveFilters ? "✕ Clear Filters" : "Clear Filters"}
         </button>
 
       </div>
+
+      {/* ==========================
+          Loading
+      ========================== */}
 
       {loading ? (
         <h3>Loading attendance records...</h3>
@@ -194,6 +324,7 @@ const AttendanceManagement = () => {
               <tr>
                 <th>Date</th>
                 <th>Student</th>
+                <th>Student ID</th>
                 <th>Subject</th>
                 <th>Staff</th>
                 <th>Status</th>
@@ -204,18 +335,23 @@ const AttendanceManagement = () => {
             <tbody>
 
               {filteredAttendance.length > 0 ? (
+
                 filteredAttendance.map((record) => (
+
                   <tr key={record.id}>
 
                     <td>{record.date}</td>
 
                     <td>{record.student_name}</td>
 
+                    <td>{record.student_id}</td>
+
                     <td>{record.subject_name}</td>
 
                     <td>{record.staff_name}</td>
 
                     <td>
+
                       <span
                         className={
                           record.status === "Present"
@@ -225,23 +361,20 @@ const AttendanceManagement = () => {
                       >
                         {record.status}
                       </span>
+
                     </td>
 
                     <td>
 
                       <button
                         className="edit-btn"
-                        onClick={() => {
-                          console.log("Edit clicked");
-                          console.log(record);
-                          handleEdit(record);
-                        }}
+                        onClick={() => handleEdit(record)}
                       >
                         ✏️ Edit
                       </button>
 
-                      <button 
-                        className="delete-btn" 
+                      <button
+                        className="delete-btn"
                         onClick={() => handleDelete(record.id)}
                       >
                         🗑 Delete
@@ -250,13 +383,19 @@ const AttendanceManagement = () => {
                     </td>
 
                   </tr>
+
                 ))
+
               ) : (
+
                 <tr>
-                  <td colSpan="6">
+
+                  <td colSpan="7">
                     No attendance records found.
                   </td>
+
                 </tr>
+
               )}
 
             </tbody>
@@ -265,6 +404,10 @@ const AttendanceManagement = () => {
 
         </div>
       )}
+
+      {/* ==========================
+          Edit Modal
+      ========================== */}
 
       <EditAttendanceModal
         isOpen={isModalOpen}

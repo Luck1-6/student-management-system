@@ -12,10 +12,16 @@ from .views import (
     AdminDashboardView,
     AdminAttendanceListView,
     AdminAttendanceUpdateView,
-    AdminAttendanceDeleteView
+    AdminAttendanceDeleteView,
+    AdminAttendanceAnalyticsView,
+    StudentAttendanceReportView,
+    StaffPerformanceView,
+    StaffListCreateView,
+    StaffUpdateView,
+    StaffStatusView,
+    StaffDeleteView,
+    LowAttendanceStudentsView
 )
-
-path
 
 urlpatterns = [
     path(
@@ -83,6 +89,45 @@ urlpatterns = [
         AdminAttendanceDeleteView.as_view(),
         name="admin-attendance-delete",
     ),
-
+    path(
+        "admin/analytics/",
+        AdminAttendanceAnalyticsView.as_view(),
+        name="admin-attendance-analytics",
+    ),
+    path(
+        "admin/student-report/<int:student_id>/",
+        StudentAttendanceReportView.as_view(),
+        name="student-attendance-report",
+    ),
+    path(
+        "admin/staff-performance/",
+        StaffPerformanceView.as_view(),
+        name="staff-performance",
+    ),
+    path(
+        "admin/staff/",
+        StaffListCreateView.as_view(),
+        name="staff-list-create",
+    ),
+    path(
+        "admin/staff/<int:pk>/",
+        StaffUpdateView.as_view(),
+        name="staff-update",
+    ),
+    path(
+        "admin/staff/<int:pk>/status/",
+        StaffStatusView.as_view(),
+        name="staff-status",
+    ),
+    path(
+        "admin/staff/<int:pk>/delete/",
+        StaffDeleteView.as_view(),
+        name="staff-delete",
+    ),
+    path(
+        "admin/low-attendance/",
+        LowAttendanceStudentsView.as_view(),
+        name="low-attendance-students",
+    ),
 ]
 

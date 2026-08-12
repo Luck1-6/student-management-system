@@ -1,0 +1,88 @@
+.staff-performance-page {
+  padding: 30px;
+  background: #f4f6f9;
+  min-height: 100vh;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.staff-table-card,
+.chart-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.staff-table thead {
+  background: #2563eb;
+  color: white;
+}
+
+.staff-table th,
+.staff-table td {
+  padding: 14px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.staff-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.staff-table th {
+  font-weight: 600;
+}
+
+.no-data {
+  padding: 30px;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.chart-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #374151;
+}
+
+@media (max-width: 768px) {
+  .staff-performance-page {
+    padding: 15px;
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
+
+  .staff-table-card {
+    overflow-x: auto;
+  }
+
+  .staff-table {
+    min-width: 650px;
+  }
+
+  .staff-table th,
+  .staff-table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .chart-card {
+    padding: 15px;
+  }
+}

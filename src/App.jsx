@@ -10,6 +10,11 @@ import AttendancePage from "./pages/AttendancePage";
 import StaffAttendancePage from "./pages/StaffAttendancePage";
 import UpdateAttendancePage from "./pages/UpdateAttendancePage";
 import AttendanceManagement from "./pages/AttendanceManagement";
+import AttendanceAnalytics from "./pages/AttendanceAnalytics";
+import StudentAttendanceReport from "./pages/StudentAttendanceReport";
+import StaffPerformance from "./pages/StaffPerformance";
+import StaffManagement from "./pages/StaffManagement";
+import LowAttendance from "./pages/LowAttendance";
 function App() {
   return (
     <BrowserRouter>
@@ -91,8 +96,53 @@ function App() {
             </ProtectedRoute>
           }
         />
+             
+        <Route
+          path="/admin/analytics"
+          element={
+            <ProtectedRoute role="admin">
+              <AttendanceAnalytics />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/admin/student-report"
+          element={
+            <ProtectedRoute role="admin">
+              <StudentAttendanceReport />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/staff-performance"
+          element={
+            <ProtectedRoute role="admin">
+              <StaffPerformance />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/staff-management"
+          element={
+            <ProtectedRoute role="admin">
+              <StaffManagement />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/low-attendance"
+          element={
+            <ProtectedRoute role="admin">
+              <LowAttendance />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
+      
     </BrowserRouter>
   );
 }

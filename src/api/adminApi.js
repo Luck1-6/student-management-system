@@ -69,3 +69,34 @@ export const getSubjects = async () => {
   return response.data;
 };
 
+/**
+ * Get Attendance Analytics
+ */
+export const getAttendanceAnalytics = async () => {
+  const response = await API.get("admin/analytics/");
+  return response.data;
+};
+
+export const getStudentAttendanceReport = async (studentId) => {
+  const response = await API.get(
+    `admin/student-report/${studentId}/`
+  );
+
+  return response.data;
+};
+
+/**
+ * Get Staff Performance Report
+ */
+export const getStaffPerformance = async () => {
+  const response = await API.get("admin/staff-performance/");
+  return response.data;
+};
+
+export const getLowAttendanceStudents = async (threshold = 75) => {
+  const response = await API.get(
+    `admin/low-attendance/?threshold=${threshold}`
+  );
+
+  return response.data;
+};

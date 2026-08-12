@@ -10,17 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
-from .models import Attendance
-from .serializers import AttendanceSerializer
-from .serializers import AttendanceUpdateSerializer
-from .serializers import AdminAttendanceSerializer
-from .serializers import AdminAttendanceUpdateSerializer
 
-from django.db.models import Count
+from django.db.models import Count, Q
 from collections import defaultdict
 
 from datetime import date
-from django.db.models import Q
 
 from users.models import CustomUser
 from .models import Subject
@@ -29,6 +23,11 @@ from .serializers import (
     AttendanceCreateSerializer,
     SubjectSerializer,
     AttendanceStatusUpdateSerializer,
+    AdminAttendanceUpdateSerializer,
+    AdminAttendanceSerializer,
+    AttendanceUpdateSerializer,
+    AttendanceSerializer,
+    StaffManagementSerializer
 )
 
 class MyAttendanceView(generics.ListAPIView):
@@ -440,6 +439,456 @@ class AdminAttendanceDeleteView(APIView):
                 "message": "Attendance deleted successfully."
             },
             status=status.HTTP_200_OK,
-        )                  
+        )            
+
+class AdminAttendanceAnalyticsView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request):
+
+        attendance = Attendance.objects.select_related(
+            "student",
+            "subject",
+        )
+
+        total = attendance.count()
+
+        present = attendance.filter(
+            status="Present"
+        ).count()
+
+        absent = attendance.filter(
+            status="Absent"
+        ).count()
+
+        overall_percentage = (
+            round((present / total) * 100, 2)
+            if total else 0
+        )
+
+        # -------------------------
+        # Subject-wise Attendance
+        # -------------------------
+
+        subject_data = []
+
+        subjects = attendance.values(
+            "subject__name"
+        ).annotate(
+            total=Count("id"),
+            present=Count(
+                "id",
+                filter=Q(status="Present")
+            )
+        )
+
+        for item in subjects:
+
+            percentage = (
+                round(
+                    item["present"] * 100 / item["total"],
+                    2
+                )
+                if item["total"] else 0
+            )
+
+            subject_data.append({
+                "subject": item["subject__name"],
+                "percentage": percentage,
+            })
+
+        # -------------------------
+        # Daily Trend
+        # -------------------------
+
+        trend = []
+
+        daily = attendance.values(
+            "date"
+        ).annotate(
+            total=Count("id"),
+            present=Count(
+                "id",
+                filter=Q(status="Present")
+            )
+        ).order_by("date")
+
+        for item in daily:
+
+            percentage = (
+                round(
+                    item["present"] * 100 / item["total"],
+                    2
+                )
+                if item["total"] else 0
+            )
+
+            trend.append({
+                "date": item["date"],
+                "percentage": percentage,
+            })
+
+        # -------------------------
+        # Student Analytics
+        # -------------------------
+
+        students = attendance.values(
+            "student__first_name",
+            "student__last_name",
+        ).annotate(
+            total=Count("id"),
+            present=Count(
+                "id",
+                filter=Q(status="Present")
+            )
+        )
+
+        student_list = []
+
+        for item in students:
+
+            percentage = (
+                round(
+                    item["present"] * 100 / item["total"],
+                    2
+                )
+                if item["total"] else 0
+            )
+
+            student_list.append({
+                "name": (
+                    item["student__first_name"]
+                    + " "
+                    + item["student__last_name"]
+                ).strip(),
+                "attendance": percentage,
+            })
+
+        top_students = sorted(
+            student_list,
+            key=lambda x: x["attendance"],
+            reverse=True,
+        )[:5]
+
+        low_students = sorted(
+            student_list,
+            key=lambda x: x["attendance"],
+        )[:5]
+
+        return Response({
+
+            "overall_percentage": overall_percentage,
+
+            "present_absent": {
+                "Present": present,
+                "Absent": absent,
+            },
+
+            "subject_attendance": subject_data,
+
+            "daily_trend": trend,
+
+            "top_students": top_students,
+
+            "low_students": low_students,
+
+        })        
+
+class StudentAttendanceReportView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request, student_id):
+        try:
+            student = CustomUser.objects.get(id=student_id, role="student")
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"error": "Student not found"},
+                status=404
+            )
+
+        attendance = Attendance.objects.filter(student=student)
+
+        total_present = attendance.filter(status="Present").count()
+        total_absent = attendance.filter(status="Absent").count()
+        total_classes = total_present + total_absent
+
+        overall_percentage = (
+            round((total_present / total_classes) * 100, 2)
+            if total_classes > 0 else 0
+        )
+
+        subject_summary = (
+            attendance.values("subject__name")
+            .annotate(
+                present=Count(
+                    "id",
+                    filter=Q(status="Present")
+                ),
+                absent=Count(
+                    "id",
+                    filter=Q(status="Absent")
+                )
+            )
+            .order_by("subject__name")
+        )
+
+        subjects = []
+
+        for item in subject_summary:
+            total = item["present"] + item["absent"]
+
+            percentage = (
+                round((item["present"] / total) * 100, 2)
+                if total > 0 else 0
+            )
+
+            subjects.append({
+                "subject": item["subject__name"],
+                "present": item["present"],
+                "absent": item["absent"],
+                "percentage": percentage,
+            })
+
+        data = {
+            "student": {
+                "id": student.id,
+                "name": student.get_full_name() or student.username,
+            },
+            "overall": {
+                "present": total_present,
+                "absent": total_absent,
+                "percentage": overall_percentage,
+            },
+            "subjects": subjects,
+        }
+
+        return Response(data)      
+
+class StaffPerformanceView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request):
+
+        staff_members = CustomUser.objects.filter(role="staff")
+
+        data = []
+
+        for staff in staff_members:
+
+            records = Attendance.objects.filter(staff=staff)
+
+            total_marked = records.count()
+
+            present = records.filter(status="Present").count()
+
+            absent = records.filter(status="Absent").count()
+
+            percentage = (
+                round((present / total_marked) * 100, 2)
+                if total_marked > 0
+                else 0
+            )
+
+            data.append({
+                "staff_id": staff.id,
+                "staff_name": staff.get_full_name() or staff.username,
+                "total_marked": total_marked,
+                "present": present,
+                "absent": absent,
+                "attendance_percentage": percentage,
+            })
+
+        return Response(data)     
+        
+class StaffListCreateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request):
+        staff = CustomUser.objects.filter(role="staff").order_by("username")
+
+        serializer = StaffManagementSerializer(
+            staff,
+            many=True
+        )
+
+        return Response(serializer.data)
+
+    def post(self, request):
+
+        serializer = StaffManagementSerializer(
+            data=request.data
+        )
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class StaffUpdateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def put(self, request, pk):
+
+        staff = get_object_or_404(
+            CustomUser,
+            pk=pk,
+            role="staff"
+        )
+
+        serializer = StaffManagementSerializer(
+            staff,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(
+                serializer.data
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )                       
+
+class StaffStatusView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def patch(self, request, pk):
+
+        staff = get_object_or_404(
+            CustomUser,
+            pk=pk,
+            role="staff"
+        )
+
+        staff.is_active = not staff.is_active
+
+        staff.save()
+
+        return Response({
+            "message": "Staff status updated successfully.",
+            "is_active": staff.is_active,
+        })
+
+class StaffDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def delete(self, request, pk):
+
+        staff = get_object_or_404(
+            CustomUser,
+            pk=pk,
+            role="staff"
+        )
+
+        staff.delete()
+
+        return Response(
+            {
+                "message": "Staff deleted successfully."
+            },
+            status=status.HTTP_200_OK
+        )
+
+class LowAttendanceStudentsView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request):
+
+        # Default threshold is 75%
+        threshold = request.query_params.get("threshold", 75)
+
+        try:
+            threshold = float(threshold)
+        except (TypeError, ValueError):
+            return Response(
+                {"error": "Threshold must be a valid number."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if threshold < 0 or threshold > 100:
+            return Response(
+                {"error": "Threshold must be between 0 and 100."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        students = CustomUser.objects.filter(
+            role="student"
+        ).annotate(
+            total_classes=Count(
+                "attendance_records"
+            ),
+            present_classes=Count(
+                "attendance_records",
+                filter=Q(
+                    attendance_records__status="Present"
+                )
+            ),
+            absent_classes=Count(
+                "attendance_records",
+                filter=Q(
+                    attendance_records__status="Absent"
+                )
+            )
+        )
+
+        low_attendance_students = []
+
+        for student in students:
+
+            total_classes = student.total_classes
+            present_classes = student.present_classes
+            absent_classes = student.absent_classes
+
+            attendance_percentage = (
+                (present_classes / total_classes) * 100
+                if total_classes > 0
+                else 0
+            )
+
+            attendance_percentage = round(
+                attendance_percentage,
+                2
+            )
+
+            if attendance_percentage < threshold:
+
+                low_attendance_students.append({
+                    "student_id": student.id,
+                    "student_name": (
+                        student.get_full_name()
+                        or student.username
+                    ),
+                    "total_classes": total_classes,
+                    "present_classes": present_classes,
+                    "absent_classes": absent_classes,
+                    "attendance_percentage": attendance_percentage,
+                })
+
+        # Lowest attendance first
+        low_attendance_students.sort(
+            key=lambda x: x["attendance_percentage"]
+        )
+
+        return Response({
+            "threshold": threshold,
+            "total_low_attendance_students": len(
+                low_attendance_students
+            ),
+            "students": low_attendance_students
+        })         
 # Create your views here.
 

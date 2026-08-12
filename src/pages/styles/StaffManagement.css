@@ -1,0 +1,399 @@
+.staff-management {
+    padding: 30px;
+    min-height: 100vh;
+    background: #f5f7fb;
+}
+
+
+/* =========================
+   Header
+========================= */
+
+.staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.staff-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #1f2937;
+}
+
+.staff-header p {
+    margin: 6px 0 0;
+    color: #6b7280;
+}
+
+
+/* =========================
+   Add Button
+========================= */
+
+.add-staff-btn {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-staff-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================
+   Error
+========================= */
+
+.staff-error {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   Toolbar
+========================= */
+
+.staff-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.staff-search {
+    width: 100%;
+    max-width: 450px;
+    padding: 11px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    outline: none;
+    font-size: 14px;
+}
+
+.staff-search:focus {
+    border-color: #2563eb;
+}
+
+.staff-count {
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   Table
+========================= */
+
+.staff-table-container {
+    background: white;
+    border-radius: 10px;
+    overflow-x: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+.staff-table th {
+    background: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.staff-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eef0f3;
+    color: #374151;
+    font-size: 14px;
+}
+
+.staff-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.username-cell {
+    font-weight: 600;
+    color: #1f2937 !important;
+}
+
+
+/* =========================
+   Status
+========================= */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-badge.inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+/* =========================
+   Actions
+========================= */
+
+.action-buttons {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    border: none;
+    padding: 7px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.edit-btn:hover {
+    background: #bfdbfe;
+}
+
+.disable-btn {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.disable-btn:hover {
+    background: #fde68a;
+}
+
+.enable-btn {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.enable-btn:hover {
+    background: #bbf7d0;
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+}
+
+
+/* =========================
+   Loading / Empty
+========================= */
+
+.staff-loading,
+.staff-empty {
+    padding: 50px;
+    text-align: center;
+    color: #6b7280;
+}
+
+
+/* =========================
+   Modal
+========================= */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.staff-modal {
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #1f2937;
+}
+
+.modal-header p {
+    margin: 5px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.close-btn {
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    color: #6b7280;
+    cursor: pointer;
+    line-height: 1;
+}
+
+
+/* =========================
+   Form
+========================= */
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #2563eb;
+}
+
+.form-group input:disabled {
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   Modal Buttons
+========================= */
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.modal-actions button {
+    border: none;
+    padding: 10px 17px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.cancel-btn:hover {
+    background: #d1d5db;
+}
+
+.save-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 768px) {
+
+    .staff-management {
+        padding: 20px;
+    }
+
+    .staff-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .add-staff-btn {
+        width: 100%;
+    }
+
+    .staff-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .staff-search {
+        max-width: none;
+    }
+
+    .staff-count {
+        text-align: right;
+    }
+
+}

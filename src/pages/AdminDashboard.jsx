@@ -93,12 +93,51 @@ function AdminDashboard() {
 
         <h2>Quick Actions</h2>
 
-        <button
-          className="attendance-btn"
-          onClick={() => navigate("/admin/attendance")}
-        >
-          📋 View Attendance
-        </button>
+        <div className="action-buttons">
+
+          <button
+            className="attendance-btn"
+            onClick={() => navigate("/admin/attendance")}
+          >
+            📋 Attendance Management
+          </button>
+
+          <button
+            className="attendance-btn analytics-btn"
+            onClick={() => navigate("/admin/analytics")}
+          >
+            📊 Attendance Analytics
+          </button>
+
+          <button
+            className="action-btn report-btn"
+            onClick={() => navigate("/admin/student-report")}
+          >
+            👨‍🎓 Student Reports
+          </button>
+
+          <button
+            className="action-btn staff-performance-btn"
+            onClick={() => navigate("/admin/staff-performance")}
+          >
+            👨‍🏫 Staff Performance
+          </button>
+
+          <button
+            className="action-btn staff-management-btn"
+            onClick={() => navigate("/admin/staff-management")}
+          >
+            👨‍🏫 Staff Management
+          </button>
+
+          <button
+            className="action-btn low-attendance-btn"
+            onClick={() => navigate("/admin/low-attendance")}
+          >
+            📉 Low Attendance
+          </button>
+
+        </div>
 
       </div>
 
